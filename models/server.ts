@@ -18,7 +18,7 @@ export class Server {
     this.app = express();
     this.port = process.env.PORT || '3000';
     this.usersPath = '/api/users';
-    this.authPath = '/api/auth/login';
+    this.authPath = '/api/auth';
 
     this.connectDb();
 
