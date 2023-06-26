@@ -5,6 +5,7 @@ const { getUsers, postUsers, putUsers, deleteUsers } = require('../controllers/u
 
 const { validateFields } = require('../middlewares/validate.fields');
 const { isValidRol, emailAlreadyExists, userAlreadyExistsWithId } = require('../helpers/db.validators');
+const { validateJWT } = require('../middlewares/validate-JWT');
 
 const router = Router();
 
@@ -28,6 +29,7 @@ router.post('/', [
 ], postUsers)
 
 router.delete('/:id', [
+  validateJWT,
   check('id', `id is not a valid ID`).isMongoId(),
   check('id', `id is not a valid ID`).custom(userAlreadyExistsWithId),
   validateFields
