@@ -1,9 +1,17 @@
+import { Schema, model } from "mongoose";
 
+export interface IUser {
+  id?: string;
+  name: string;
+  email: string;
+  password: string;
+  img: string;
+  rol: string;
+  status: boolean;
+  google: boolean;
+}
 
-
-const { Schema, model } = require('mongoose')
-
-const UserSchema = Schema({
+const UserSchema = new Schema<IUser>({
   name: {
     type: String,
     require: [true, 'Name is required'],
@@ -43,5 +51,4 @@ UserSchema.methods.toJSON = function() {
   return user;
 }
 
-
-module.exports = model( 'Users', UserSchema );
+export const User = model<IUser>('User', UserSchema);

@@ -1,19 +1,29 @@
-const { Router } = require('express');
-const { check } = require('express-validator');
+import { Router } from "express";
+import { check } from "express-validator";
 
-const { getUsers, postUsers, putUsers, deleteUsers } = require('../controllers/users.controller');
+import { 
+  getUsers, 
+  postUsers, 
+  putUsers, 
+  deleteUsers } from "../controllers/users.controller"
+import { 
+  isValidRol, 
+  emailAlreadyExists, 
+  userAlreadyExistsWithId } from "../helpers/db.validators"
+import { 
+  validateFields, 
+  validateJWT, 
+  isAdminRole, 
+  hasRole } from "../middlewares"
 
-const { isValidRol, emailAlreadyExists, userAlreadyExistsWithId } = require('../helpers/db.validators');
-
-const { validateFields, validateJWT, isAdminRole, hasRole } = require('../middlewares');
-
-const router = Router();
-
-router.get('/', getUsers);
 
 
+const userRouter = Router();
 
-router.put('/:id', [
+userRouter.get('/', getUsers);
+
+
+userRouter.put('/:id', [
   check('id', `id is not a valid ID`).isMongoId(),
   check('id', `id is not a valid ID`).custom(userAlreadyExistsWithId),
   check('rol').custom(isValidRol),
@@ -22,7 +32,7 @@ router.put('/:id', [
 
 
 
-router.post('/', [
+userRouter.post('/', [
   check('name', 'Name is required').not().isEmpty(),
   check('password', 'Password should be more than 6 characters').isLength({ min:6 }),
   check('email', 'Email is not valid').custom(emailAlreadyExists),
@@ -33,10 +43,10 @@ router.post('/', [
 
 
 
-router.delete('/:id', [
+userRouter.delete('/:id', [
   validateJWT,
-  // isAdminRole,
-  hasRole('USER_ROLE'),
+  isAdminRole,
+  hasRole('ADMIN_ROLE'),
   check('id', `id is not a valid ID`).isMongoId(),
   check('id', `id is not a valid ID`).custom(userAlreadyExistsWithId),
   validateFields
@@ -44,5 +54,4 @@ router.delete('/:id', [
 
 
 
-
-module.exports = router;
+export default userRouter;
