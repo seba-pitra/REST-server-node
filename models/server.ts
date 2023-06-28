@@ -5,20 +5,24 @@ import { config } from 'dotenv';
 import userRouter from '../routes/user.routes';
 import authRouter from '../routes/auth.routes';
 import dbConnection from '../db/config.db';
+import catogoriesRouter from '../routes/categories.routes';
 
 config();
 
 export class Server {
   private app: Express;
   private port: string;
-  private usersPath: string;
-  private authPath: string;
+  private paths: { [key:string]: string }
 
   constructor() {
     this.app = express();
     this.port = process.env.PORT || '3000';
-    this.usersPath = '/api/users';
-    this.authPath = '/api/auth';
+
+    this.paths = {
+      categories: '/api/categories',
+      auth:       '/api/auth',
+      users:      '/api/users',
+    }
 
     this.connectDb();
 
@@ -40,9 +44,9 @@ export class Server {
   }
 
   routes() {
-    this.app.use(this.usersPath, userRouter)
-
-    this.app.use(this.authPath, authRouter)
+    this.app.use(this.paths.users, userRouter)
+    this.app.use(this.paths.auth, authRouter)
+    this.app.use(this.paths.categories, catogoriesRouter)
   }
 
   listen() {
