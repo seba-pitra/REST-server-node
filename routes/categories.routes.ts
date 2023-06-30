@@ -1,7 +1,8 @@
 import { Router } from "express";
 import { check } from "express-validator";
 
-
+import { validateFields, validateJWT } from "../middlewares"
+import { createCategory } from "../controllers/categories.controller";
 
 const catogoriesRouter: Router = Router();
 
@@ -15,7 +16,11 @@ catogoriesRouter.get('/:id', (req, res) => res.json("todo ok") )
 
 
 // Create category - Private - any person with valid token
-catogoriesRouter.post('/', (req, res) => res.json("todo ok") )
+catogoriesRouter.post('/', [
+  validateJWT,
+  check('name', 'Name is required').not().isEmpty(),
+  validateFields,
+], createCategory )
 
 
 // update category by id - Private - any person with valid token
