@@ -10,7 +10,8 @@ export interface ICategory {
 const CategorySchema = new Schema<ICategory>({
   name: {
     type: String,
-    required: [true, 'Name is required']
+    required: [true, 'Name is required'],
+    unique: true,
   },
   status: {
     type: Boolean,
